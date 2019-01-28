@@ -1,0 +1,63 @@
+version: "3"
+services:
+  zoo1:
+    image: zookeeper
+    hostname: zoo1
+    networks:
+      nifi:
+        aliases:
+          - zoo1
+        ipv4_address: 172.19.0.2
+    
+  nifi1:
+    image: apache/nifi:1.8.0
+    hostname: nifi1
+    networks:
+      nifi:
+        aliases:
+         - nifi1
+        ipv4_address: 172.19.0.3
+    volumes:
+      - ./node1/nifi/state:/opt/nifi/nifi-current/state
+      - ./node1/nifi/files:/home/nifi/files
+    environment: 
+      - NIFI_ZK_CONNECT_STRING=zoo1:2181
+      - NIFI_CLUSTER_IS_NODE=true   
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8083
+
+  nifi2:
+    image: apache/nifi:1.8.0
+    hostname: nifi2
+    networks:
+      nifi:
+        aliases:
+         - nifi2
+        ipv4_address: 172.19.0.4
+    volumes:
+      - ./node2/nifi/state:/opt/nifi/nifi-current/state
+      - ./node2/nifi/files:/home/nifi/files
+    environment: 
+      - NIFI_ZK_CONNECT_STRING=zoo1:2181
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8083
+
+  nifi3:
+    image: apache/nifi:1.8.0
+    hostname: nifi3
+    networks:
+      nifi:
+        aliases:
+         - nifi3
+        ipv4_address: 172.19.0.5
+    volumes:
+      - ./node3/nifi/state:/opt/nifi/nifi-current/state
+      - ./node3/nifi/files:/home/nifi/files
+    environment: 
+      - NIFI_ZK_CONNECT_STRING=zoo1:2181
+      - NIFI_CLUSTER_IS_NODE=true
+      - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8083
+
+networks:
+  nifi:
+    external:
+      name: nifi

@@ -1,0 +1,33 @@
+version: "3"
+services:
+  nifidev:
+    image: apache/nifi:1.8.0
+    hostname: nifi1-dev
+    networks:
+      nifi:
+        aliases:
+         - nifi1-dev
+        ipv4_address: 172.19.0.10
+
+  nifiprod:
+    image: apache/nifi:1.8.0
+    hostname: nifi-prod
+    networks:
+      nifi:
+        aliases:
+         - nifi-prod
+        ipv4_address: 172.19.0.11
+
+  nifireg:
+    image: apache/nifi:1.8.0
+    hostname: nifi-reg
+    networks:
+      nifi:
+        aliases:
+         - nifi-reg
+        ipv4_address: 172.19.0.12
+
+networks:
+  nifi:
+    external:
+      name: nifi
